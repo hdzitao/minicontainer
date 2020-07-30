@@ -9,6 +9,7 @@ import study.aop.parser.MethodParser;
 import study.aop.parser.ParserFactory;
 import study.aop.parser.PathParser;
 import study.factory.processor.BeanAfterProcessor;
+import study.reflect.ClassResolver;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -22,10 +23,12 @@ public abstract class AopProcessor {
 
     @SneakyThrows
     public AopProcessor(Annotation annotation) {
-        this.methodParser = ParserFactory.getMethodParser((String) annotation.annotationType().getMethod("method")
-                .invoke(annotation));
-        this.pathParser = ParserFactory.getPathParser((String) annotation.annotationType().getMethod("path")
-                .invoke(annotation), this.methodParser);
+        this.methodParser = ParserFactory.getMethodParser(
+                ClassResolver.send(annotation.annotationType().getMethod("method"), annotation));
+        this.pathParser = ParserFactory.getPathParser(
+                ClassResolver.send(annotation.annotationType().getMethod("path"), annotation),
+                this.methodParser
+        );
     }
 
     /**
@@ -36,20 +39,18 @@ public abstract class AopProcessor {
      * @return
      */
     public BeanAfterProcessor getProcessor(Class<?> aopClass, Method aopMethod) {
-        aopMethod.setAccessible(true);
         return (factory, configure, bean) -> {
             // 判断class是否满足条件
             if (pathParser.parse(configure)) {
                 // 类中有命中aop的方法,利用CGLib代理方法
                 InvocationHandler handler = (proxy, method, args) -> {
-                    method.setAccessible(true);
                     if (methodParser.parse(method)) {
                         // 命中方法走aop
                         CutPoint cutPoint = new CutPoint(configure.getBeanClass(), method, args, null, bean);
                         return invokeAop(factory.getBean(aopClass), aopMethod, cutPoint);
                     } else {
                         // 未命中方法调用原方法
-                        return method.invoke(bean, args);
+                        return ClassResolver.send(method, bean, args);
                     }
                 };
 

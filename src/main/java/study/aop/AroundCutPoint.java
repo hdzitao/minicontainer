@@ -1,6 +1,7 @@
 package study.aop;
 
 import lombok.SneakyThrows;
+import study.reflect.ClassResolver;
 
 public class AroundCutPoint extends CutPoint {
     public AroundCutPoint(CutPoint point) {
@@ -9,11 +10,11 @@ public class AroundCutPoint extends CutPoint {
 
     @SneakyThrows
     public Object join() {
-        return this.method.invoke(this.target, this.args);
+        return ClassResolver.send(this.method, this.target, this.args);
     }
 
     @SneakyThrows
     public Object join(Object... args) {
-        return this.method.invoke(this.target, args);
+        return ClassResolver.send(this.method, this.target, args);
     }
 }

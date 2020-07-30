@@ -1,5 +1,7 @@
 package study.reflect;
 
+import lombok.SneakyThrows;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -42,5 +44,25 @@ public final class ClassResolver {
         } while ((current = current.getSuperclass()) != null);
         methods.addAll(Arrays.asList(clazz.getMethods())); // interface default method
         return methods.toArray(new Method[0]);
+    }
+
+    @SneakyThrows
+    public static void set(Field field, Object bean, Object value) {
+        field.setAccessible(true);
+        field.set(bean, value);
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
+    public static <T> T get(Field field, Object bean) {
+        field.setAccessible(true);
+        return (T) field.get(bean);
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
+    public static <T> T send(Method method, Object bean, Object... args) {
+        method.setAccessible(true);
+        return (T) method.invoke(bean, args);
     }
 }

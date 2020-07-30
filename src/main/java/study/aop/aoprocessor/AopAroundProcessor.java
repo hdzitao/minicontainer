@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import study.aop.Around;
 import study.aop.AroundCutPoint;
 import study.aop.CutPoint;
+import study.reflect.ClassResolver;
 
 import java.lang.reflect.Method;
 
@@ -21,6 +22,6 @@ public class AopAroundProcessor extends AopProcessor {
         // 用CutPoint生成AroundCutPoint,AroundCutPoint可以自行决定执行原方法
         AroundCutPoint cutPoint = new AroundCutPoint(point);
         // 执行aop方法,返回aop方法的结果
-        return aopMethod.invoke(aop, cutPoint);
+        return ClassResolver.send(aopMethod, aop, cutPoint);
     }
 }

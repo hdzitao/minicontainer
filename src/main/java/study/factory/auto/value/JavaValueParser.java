@@ -19,6 +19,6 @@ public class JavaValueParser implements ValueParser {
 
     @Override
     public Object getValue(BeanFactory factory) {
-        return factory.getBean(ValueConvertor.class).convert(this.type, value);
+        return factory.getBean(JSONValueConverter.class).convert(this.type, value);
     }
 }

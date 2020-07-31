@@ -28,7 +28,7 @@ public class MiniContainer implements BeanFactory {
 
     private static MiniBeanFactory createFactory(Class<?> app) {
         AnnotationConfigureReader configureReader = new AnnotationConfigureReader();
-        // 默认组件
+        // 系统组件
         configureReader.addComponent(MiniContainer.class.getPackage().getName(), MiniContainer.class.getClassLoader());
         // 用户组件
         configureReader.addComponent(app.getPackage().getName(), app.getClassLoader());

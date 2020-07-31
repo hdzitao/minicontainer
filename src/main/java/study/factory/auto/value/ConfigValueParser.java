@@ -25,7 +25,7 @@ public class ConfigValueParser implements ValueParser {
     @Override
     @SneakyThrows
     public Object getValue(BeanFactory factory) {
-        return new JavaValueParser(factory.getBean(ConfigureContext.class).get(this.configKey), this.type)
+        return new JavaValueParser(factory.getBean(JSONConfigureContext.class).get(this.configKey), this.type)
                 .getValue(factory);
     }
 }

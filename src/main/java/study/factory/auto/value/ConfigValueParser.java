@@ -4,6 +4,7 @@ package study.factory.auto.value;
 import lombok.SneakyThrows;
 import study.factory.BeanFactory;
 
+import java.lang.reflect.Type;
 import java.util.regex.Pattern;
 
 /**
@@ -14,17 +15,17 @@ public class ConfigValueParser implements ValueParser {
     public static final Pattern CONFIG_PATTERN = Pattern.compile("^\\$\\{(.+)}$");
 
     private String configKey;
-    private Class<?> clazz;
+    private Type type;
 
-    public ConfigValueParser(String configKey, Class<?> clazz) {
+    public ConfigValueParser(String configKey, Type type) {
         this.configKey = configKey;
-        this.clazz = clazz;
+        this.type = type;
     }
 
     @Override
     @SneakyThrows
     public Object getValue(BeanFactory factory) {
-        return new JavaValueParser(factory.getBean(ConfigureContext.class).get(this.configKey), this.clazz)
+        return new JavaValueParser(factory.getBean(ConfigureContext.class).get(this.configKey), this.type)
                 .getValue(factory);
     }
 }

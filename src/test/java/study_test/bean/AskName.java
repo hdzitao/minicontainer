@@ -7,6 +7,10 @@ import study.factory.auto.Autowired;
 import study.factory.auto.MiniComponent;
 import study.factory.auto.Value;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Created by taojinhou on 2019/12/6.
  */
@@ -29,8 +33,23 @@ public class AskName {
     @Getter
     private int askNum;
 
+    @Value("[1,2,3,4,5]")
+    private int[] intArray;
+
+    @Value("[1,2,3,4,5]")
+    private Integer[] intArray2;
+
+    @Value("[1,2,3,4,5]")
+    private List<Integer> intList;
+
+    @Value("[1,2,3,4,5]")
+    private Set<Integer> intSet;
+
+    @Value("{'1':1, '2': 1}")
+    private Map<String, Integer> map;
+
     @Autowired
-    public AskName(ShowName name, @Value("${test.value}") int askNum) {
+    public AskName(ShowName name, @Value("${test2.0}") int askNum) {
         this.name = name;
         this.askNum = askNum;
     }

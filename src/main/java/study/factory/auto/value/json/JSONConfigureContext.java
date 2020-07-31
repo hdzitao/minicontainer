@@ -37,7 +37,7 @@ public class JSONConfigureContext implements ConfigureContext {
             } else if (current instanceof JSONArray) {
                 current = ((JSONArray) current).get(Integer.parseInt(split));
             } else {
-                throw new BeanCreatingException(current + " has no " + split);
+                throw new BeanCreatingException("can't find value, key:" + path);
             }
         }
 

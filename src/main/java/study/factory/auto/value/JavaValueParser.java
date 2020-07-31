@@ -2,21 +2,23 @@ package study.factory.auto.value;
 
 import study.factory.BeanFactory;
 
+import java.lang.reflect.Type;
+
 /**
  * java值分析器
  * Created by taojinhou on 2020/1/10.
  */
 public class JavaValueParser implements ValueParser {
     private final String value;
-    private final Class<?> clazz;
+    private final Type type;
 
-    public JavaValueParser(String value, Class<?> clazz) {
+    public JavaValueParser(String value, Type type) {
         this.value = value;
-        this.clazz = clazz;
+        this.type = type;
     }
 
     @Override
     public Object getValue(BeanFactory factory) {
-        return factory.getBean(ValueConvertor.class).convert(this.clazz, value);
+        return factory.getBean(ValueConvertor.class).convert(this.type, value);
     }
 }

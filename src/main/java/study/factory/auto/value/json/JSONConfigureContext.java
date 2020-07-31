@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.SneakyThrows;
 import study.factory.BeanCreatingException;
+import study.factory.auto.DefaultImplementation;
 import study.factory.auto.MiniComponent;
 import study.factory.auto.value.ConfigureContext;
 
@@ -15,6 +16,7 @@ import java.io.InputStream;
  * Created by taojinhou on 2020/3/20.
  */
 @MiniComponent
+@DefaultImplementation
 public class JSONConfigureContext implements ConfigureContext {
     private final JSONObject configure;
 

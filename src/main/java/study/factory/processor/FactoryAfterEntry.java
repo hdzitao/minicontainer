@@ -16,7 +16,7 @@ public class FactoryAfterEntry implements Comparable<FactoryAfterEntry> {
     private final Class<? extends FactoryAfterProcessor> processor;
 
     @Getter
-    private final RegisterPriority priority;
+    private final FactoryAfterPriority priority;
 
     @Override
     public int compareTo(FactoryAfterEntry others) {

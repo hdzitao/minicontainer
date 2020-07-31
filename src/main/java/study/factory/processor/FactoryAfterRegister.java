@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 public @interface FactoryAfterRegister {
     Class<? extends FactoryAfterProcessor> value();
 
-    RegisterPriority priority() default RegisterPriority.LOW;
+    FactoryAfterPriority priority() default FactoryAfterPriority.LOW;
 }

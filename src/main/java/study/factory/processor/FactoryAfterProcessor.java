@@ -1,7 +1,7 @@
 package study.factory.processor;
 
-import study.factory.BeanConfigure;
 import study.factory.BeanFactory;
+import study.factory.configure.BeanConfigure;
 
 /**
  * Created by taojinhou on 2020/7/29.

@@ -1,8 +1,8 @@
 package study.factory.processor;
 
-import study.factory.BeanConfigure;
 import study.factory.BeanFactory;
 import study.factory.auto.MiniComponent;
+import study.factory.configure.BeanConfigure;
 
 /**
  * bean后置处理器添加器

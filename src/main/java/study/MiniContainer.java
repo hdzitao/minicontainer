@@ -1,13 +1,12 @@
 package study;
 
 import lombok.SneakyThrows;
-import study.factory.*;
-import study.factory.auto.MiniComponent;
-import study.reflect.PackageResolver;
-
-import java.util.LinkedHashMap;
-import java.util.Set;
-import java.util.stream.Collectors;
+import study.factory.BeanCreatingException;
+import study.factory.BeanFactory;
+import study.factory.MiniBeanFactory;
+import study.factory.configure.AnnotationConfigureReader;
+import study.factory.configure.BeanConfigure;
+import study.factory.configure.MiniScanBase;
 
 /**
  * Created by taojinhou on 2019/4/16.
@@ -28,30 +27,20 @@ public class MiniContainer implements BeanFactory {
     }
 
     private static MiniBeanFactory createFactory(Class<?> app) {
-        LinkedHashMap<String, ClassLoader> components = new LinkedHashMap<>();
+        AnnotationConfigureReader configureReader = new AnnotationConfigureReader();
         // 默认组件
-        components.put(MiniContainer.class.getPackage().getName(), MiniContainer.class.getClassLoader());
+        configureReader.addComponent(MiniContainer.class.getPackage().getName(), MiniContainer.class.getClassLoader());
         // 用户组件
-        components.put(app.getPackage().getName(), app.getClassLoader());
+        configureReader.addComponent(app.getPackage().getName(), app.getClassLoader());
         // 用户附加的组件
         MiniScanBase scanBase = app.getAnnotation(MiniScanBase.class);
         if (scanBase != null) {
             for (String comp : scanBase.value()) {
-                components.put(comp, app.getClassLoader());
+                configureReader.addComponent(comp, app.getClassLoader());
             }
         }
-        // 扫描class文件
-        Set<Class<?>> classes = components.entrySet().stream()
-                .flatMap(entry -> PackageResolver.scanClass(entry.getKey(), entry.getValue(),
-                        clazz -> clazz.isAnnotationPresent(MiniComponent.class)).stream())
-                .collect(Collectors.toSet());
         // 新建BeanFactory
-        MiniBeanFactory factory = new MiniBeanFactory();
-        classes.forEach(clazz -> factory.addBeanConfigure(
-                BeanConfigure.forClass(clazz, clazz.getAnnotation(MiniComponent.class).singleton())));
-        factory.finish();
-
-        return factory;
+        return new MiniBeanFactory(configureReader).finish();
     }
 
     @Override

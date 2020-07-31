@@ -1,4 +1,4 @@
-package study.factory;
+package study.factory.configure;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package study.factory;
+package study.factory.configure;
 
 import lombok.Getter;
 import study.factory.auto.Autowired;

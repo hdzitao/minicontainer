@@ -2,7 +2,7 @@ package study.aop.parser;
 
 
 import study.aop.Aop;
-import study.factory.BeanConfigure;
+import study.factory.configure.BeanConfigure;
 
 import java.lang.reflect.Method;
 

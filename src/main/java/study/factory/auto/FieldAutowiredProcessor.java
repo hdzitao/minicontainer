@@ -1,9 +1,9 @@
 package study.factory.auto;
 
 import lombok.SneakyThrows;
-import study.factory.BeanConfigure;
 import study.factory.BeanCreatingException;
 import study.factory.BeanFactory;
+import study.factory.configure.BeanConfigure;
 import study.factory.processor.BeanAfterProcessor;
 import study.reflect.ClassResolver;
 

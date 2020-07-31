@@ -1,8 +1,8 @@
 package study.aop.aoprocessor;
 
-import study.factory.BeanConfigure;
 import study.factory.BeanFactory;
 import study.factory.auto.MiniComponent;
+import study.factory.configure.BeanConfigure;
 import study.factory.processor.BeanAfterConfigurator;
 import study.factory.processor.BeanAfterProcessor;
 import study.factory.processor.FactoryAfterProcessor;

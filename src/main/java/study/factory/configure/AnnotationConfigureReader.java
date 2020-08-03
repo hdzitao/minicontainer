@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import study.factory.auto.MiniComponent;
 import study.reflect.pkg.ClassInfo;
-import study.reflect.pkg.ResourceInfo;
 import study.reflect.pkg.Scanner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 /**
  * Created by taojinhou on 2020/7/31.
@@ -32,18 +31,16 @@ public class AnnotationConfigureReader implements BeanConfigureReader {
     @Override
     public void register(ConfigurableBeanFactory factory) {
         this.components.forEach(entry -> {
-            Set<ResourceInfo> resourceInfos = new Scanner(entry.getPkg(), entry.getClassLoader()).scan();
-            for (ResourceInfo resource : resourceInfos) {
-                if (resource instanceof ClassInfo) {
-                    Class<?> clazz = ((ClassInfo) resource).load();
-                    if (clazz != null) {
+            new Scanner(entry.getPkg(), entry.getClassLoader()).scan().stream()
+                    .filter(resourceInfo -> resourceInfo instanceof ClassInfo)
+                    .map(classInfo -> ((ClassInfo) classInfo).load())
+                    .filter(Objects::nonNull)
+                    .forEach(clazz -> {
                         MiniComponent component = clazz.getAnnotation(MiniComponent.class);
                         if (component != null) {
                             factory.addBeanConfigure(BeanConfigure.forClass(clazz, component.singleton()));
                         }
-                    }
-                }
-            }
+                    });
         });
     }
 }

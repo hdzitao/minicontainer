@@ -3,12 +3,13 @@ package study.factory.configure;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import study.factory.auto.MiniComponent;
-import study.reflect.PackageResolver;
+import study.reflect.pkg.ClassInfo;
+import study.reflect.pkg.ResourceInfo;
+import study.reflect.pkg.Scanner;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by taojinhou on 2020/7/31.
@@ -30,13 +31,19 @@ public class AnnotationConfigureReader implements BeanConfigureReader {
 
     @Override
     public void register(ConfigurableBeanFactory factory) {
-        // 扫描class文件
-        Set<Class<?>> classes = this.components.stream()
-                .flatMap(entry -> PackageResolver.scanClass(entry.getPkg(), entry.getClassLoader(),
-                        clazz -> clazz.isAnnotationPresent(MiniComponent.class)).stream())
-                .collect(Collectors.toSet());
-        // 注册
-        classes.forEach(clazz -> factory.addBeanConfigure(
-                BeanConfigure.forClass(clazz, clazz.getAnnotation(MiniComponent.class).singleton())));
+        this.components.forEach(entry -> {
+            Set<ResourceInfo> resourceInfos = new Scanner(entry.getPkg(), entry.getClassLoader()).scan();
+            for (ResourceInfo resource : resourceInfos) {
+                if (resource instanceof ClassInfo) {
+                    Class<?> clazz = ((ClassInfo) resource).load();
+                    if (clazz != null) {
+                        MiniComponent component = clazz.getAnnotation(MiniComponent.class);
+                        if (component != null) {
+                            factory.addBeanConfigure(BeanConfigure.forClass(clazz, component.singleton()));
+                        }
+                    }
+                }
+            }
+        });
     }
 }

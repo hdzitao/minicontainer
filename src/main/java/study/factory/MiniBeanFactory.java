@@ -3,7 +3,7 @@ package study.factory;
 import lombok.SneakyThrows;
 import study.factory.auto.InjectInfo;
 import study.factory.configure.BeanConfigure;
-import study.factory.configure.BeanConfigureReader;
+import study.factory.configure.BeanConfigureRegister;
 import study.factory.configure.ConfigurableBeanFactory;
 import study.factory.processor.BeanAfterConfigurator;
 import study.factory.processor.BeanAfterProcessor;
@@ -32,12 +32,12 @@ public class MiniBeanFactory implements ConfigurableBeanFactory, BeanAfterConfig
     // factory后置处理器
     private final PriorityQueue<FactoryAfterEntry> factoryAfterProcessorHolder;
     // bean配置获取器
-    private final BeanConfigureReader configureReader;
+    private final BeanConfigureRegister configureRegister;
 
 
-    public MiniBeanFactory(BeanConfigureReader configureReader) {
+    public MiniBeanFactory(BeanConfigureRegister configureRegister) {
         // 初始化配置获取器
-        this.configureReader = configureReader;
+        this.configureRegister = configureRegister;
         // 线程安全
         this.beanConfigureMap = new ConcurrentHashMap<>();
         this.singletonBeanMap = new ConcurrentHashMap<>();
@@ -98,7 +98,7 @@ public class MiniBeanFactory implements ConfigurableBeanFactory, BeanAfterConfig
      */
     public MiniBeanFactory finish() {
         // 读取bean配置
-        this.configureReader.register(this);
+        this.configureRegister.register(this);
         // 执行factory后置处理器
         while (!this.factoryAfterProcessorHolder.isEmpty()) {
             FactoryAfterEntry entry = this.factoryAfterProcessorHolder.poll();

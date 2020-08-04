@@ -4,7 +4,8 @@ import lombok.SneakyThrows;
 import study.factory.BeanCreatingException;
 import study.factory.BeanFactory;
 import study.factory.MiniBeanFactory;
-import study.factory.configure.AnnotationConfigureReader;
+import study.factory.auto.MiniConfigureReader;
+import study.factory.configure.AnnotationConfigureRegister;
 import study.factory.configure.BeanConfigure;
 import study.factory.configure.MiniScanBase;
 
@@ -27,20 +28,20 @@ public class MiniContainer implements BeanFactory {
     }
 
     private static MiniBeanFactory createFactory(Class<?> app) {
-        AnnotationConfigureReader configureReader = new AnnotationConfigureReader();
+        AnnotationConfigureRegister configureRegister = new AnnotationConfigureRegister(new MiniConfigureReader());
         // 系统组件
-        configureReader.addComponent(MiniContainer.class.getPackage().getName(), MiniContainer.class.getClassLoader());
+        configureRegister.addComponent(MiniContainer.class.getPackage().getName(), MiniContainer.class.getClassLoader());
         // 用户组件
-        configureReader.addComponent(app.getPackage().getName(), app.getClassLoader());
+        configureRegister.addComponent(app.getPackage().getName(), app.getClassLoader());
         // 用户附加的组件
         MiniScanBase scanBase = app.getAnnotation(MiniScanBase.class);
         if (scanBase != null) {
             for (String comp : scanBase.value()) {
-                configureReader.addComponent(comp, app.getClassLoader());
+                configureRegister.addComponent(comp, app.getClassLoader());
             }
         }
         // 新建BeanFactory
-        return new MiniBeanFactory(configureReader).finish();
+        return new MiniBeanFactory(configureRegister).finish();
     }
 
     @Override

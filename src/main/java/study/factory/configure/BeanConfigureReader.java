@@ -1,8 +1,8 @@
 package study.factory.configure;
 
 /**
- * Created by taojinhou on 2020/7/31.
+ * Created by taojinhou on 2020/8/4.
  */
-public interface BeanConfigureReader {
-    void register(ConfigurableBeanFactory factory);
+public interface BeanConfigureReader<Definition> {
+    BeanConfigure read(Definition definition);
 }

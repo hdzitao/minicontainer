@@ -1,7 +1,7 @@
 package study.factory.configure;
 
 import lombok.Getter;
-import study.factory.auto.Autowired;
+import lombok.Setter;
 
 import java.lang.reflect.Constructor;
 import java.util.Objects;
@@ -11,32 +11,23 @@ import java.util.Objects;
  */
 public class BeanConfigure {
     @Getter
-    private Object bean;
-
-    @Getter
-    private boolean singleton;
-
-    @Getter
-    private Object singletonLock;
-
-    @Getter
     private Class<?> beanClass;
 
     @Getter
+    @Setter
+    private Object bean;
+
+    @Getter
+    @Setter
+    private boolean singleton;
+
+    @Getter
+    @Setter
     private Constructor<?> constructor;
 
-    public static BeanConfigure forClass(Class<?> baseClass, boolean singleton) {
+    public static BeanConfigure forClass(Class<?> baseClass) {
         BeanConfigure configure = new BeanConfigure();
-        configure.singleton = singleton;
         configure.beanClass = baseClass;
-        for (Constructor<?> constructor : baseClass.getConstructors()) {
-            if (constructor.isAnnotationPresent(Autowired.class)) {
-                configure.constructor = constructor;
-                break;
-            }
-        }
-
-        configure.singletonLock = configure;
 
         return configure;
     }
@@ -45,9 +36,7 @@ public class BeanConfigure {
         BeanConfigure configure = new BeanConfigure();
         configure.bean = bean;
         configure.beanClass = beanClass;
-
         configure.singleton = true;
-        configure.singletonLock = configure;
 
         return configure;
     }

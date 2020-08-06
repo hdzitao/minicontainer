@@ -77,7 +77,7 @@ public class MiniBeanFactory implements ConfigurableBeanFactory, BeanAfterConfig
         if (configure.isSingleton()) {
             Class<?> beanClass = configure.getBeanClass();
             if ((bean = this.singletonBeanMap.get(beanClass)) == null) {
-                synchronized (configure.getSingletonLock()) {
+                synchronized (configure) {
                     if ((bean = this.singletonBeanMap.get(beanClass)) == null) {
                         bean = createBean(configure);
                         this.singletonBeanMap.put(beanClass, bean);

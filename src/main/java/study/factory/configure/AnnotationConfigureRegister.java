@@ -35,17 +35,15 @@ public class AnnotationConfigureRegister implements BeanConfigureRegister {
 
     @Override
     public void register(ConfigurableBeanFactory factory) {
-        this.components.forEach(entry -> {
-            new Scanner(entry.getPkg(), entry.getClassLoader()).scan().stream()
-                    .filter(resourceInfo -> resourceInfo instanceof ClassInfo)
-                    .map(classInfo -> ((ClassInfo) classInfo).load())
-                    .filter(Objects::nonNull)
-                    .forEach(clazz -> {
-                        BeanConfigure configure = reader.read(clazz);
-                        if (configure != null) {
-                            factory.addBeanConfigure(configure);
-                        }
-                    });
-        });
+        this.components.forEach(entry -> new Scanner(entry.getPkg(), entry.getClassLoader()).scan().stream()
+                .filter(resourceInfo -> resourceInfo instanceof ClassInfo)
+                .map(classInfo -> ((ClassInfo) classInfo).load())
+                .filter(Objects::nonNull)
+                .forEach(clazz -> {
+                    BeanConfigure configure = reader.read(clazz);
+                    if (configure != null) {
+                        factory.addBeanConfigure(configure);
+                    }
+                }));
     }
 }

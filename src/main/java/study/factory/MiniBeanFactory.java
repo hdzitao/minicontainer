@@ -138,7 +138,7 @@ public class MiniBeanFactory implements ConfigurableBeanFactory, BeanAfterConfig
                 // 直接包含FactoryAfterRegister注解
                 after = (FactoryAfterRegister) annotation;
             } else if ((after = annotation.annotationType().getAnnotation(FactoryAfterRegister.class)) == null) {
-                // 有包含FactoryAfterRegister注解的注解
+                // 没有包含FactoryAfterRegister注解的注解
                 continue;
             }
 
@@ -203,8 +203,12 @@ public class MiniBeanFactory implements ConfigurableBeanFactory, BeanAfterConfig
      * @return
      */
     private BeanConfigure findBeanConfigure(Class<?> requiredClass) {
-        // 如果是接口，搜索整个bean空间
-        if (requiredClass.isInterface()) {
+        BeanConfigure beanConfigure = this.beanConfigureMap.get(requiredClass);
+
+        if (beanConfigure != null) {
+            return beanConfigure;
+        } else {
+            // 没有直接找到,搜索整个bean空间找子类或实现接口的类
             List<BeanConfigure> configures = new ArrayList<>();
 
             for (BeanConfigure configure : this.beanConfigureMap.values()) {
@@ -216,13 +220,11 @@ public class MiniBeanFactory implements ConfigurableBeanFactory, BeanAfterConfig
             if (configures.isEmpty()) {
                 return null;
             } else if (configures.size() > 1) {
-                throw new BeanCreatingException(requiredClass, "There are multiple interface implementations:"
+                throw new BeanCreatingException(requiredClass, "There are multiple implementations:"
                         + configures.stream().map(configure -> configure.getBeanClass().getName()).collect(Collectors.joining(",")));
             } else {
                 return configures.get(0);
             }
-        } else {
-            return this.beanConfigureMap.get(requiredClass);
         }
     }
 }

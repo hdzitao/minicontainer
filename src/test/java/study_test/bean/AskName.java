@@ -15,7 +15,7 @@ import java.util.Set;
  * Created by taojinhou on 2019/12/6.
  */
 @MiniComponent
-public class AskName {
+public class AskName extends FatherAskName {
     private ShowName name;
 
     @Autowired

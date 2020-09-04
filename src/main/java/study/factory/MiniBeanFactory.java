@@ -1,9 +1,9 @@
 package study.factory;
 
 import lombok.SneakyThrows;
-import study.factory.auto.InjectInfo;
 import study.factory.configure.BeanConfigure;
 import study.factory.configure.BeanConfigureRegister;
+import study.factory.configure.BeanConstructor;
 import study.factory.configure.ConfigurableBeanFactory;
 import study.factory.processor.BeanAfterConfigurator;
 import study.factory.processor.BeanAfterProcessor;
@@ -11,7 +11,6 @@ import study.factory.processor.FactoryAfterEntry;
 import study.factory.processor.FactoryAfterRegister;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -176,11 +175,9 @@ public class MiniBeanFactory implements ConfigurableBeanFactory, BeanAfterConfig
             }
 
             // 获取构造函数
-            Constructor<?> constructor = configure.getConstructor();
+            BeanConstructor constructor = configure.getBeanConstructor();
             if (constructor != null) {
-                // 处理参数注入
-                Object[] args = InjectInfo.getParameterBeans(constructor, this);
-                bean = constructor.newInstance(args);
+                bean = constructor.getBeanByConstructor(this);
             } else {
                 bean = beanClass.newInstance();
             }

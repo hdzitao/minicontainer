@@ -3,7 +3,6 @@ package study.factory.configure;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Constructor;
 import java.util.Objects;
 
 /**
@@ -23,7 +22,7 @@ public class BeanConfigure {
 
     @Getter
     @Setter
-    private Constructor<?> constructor;
+    private BeanConstructor beanConstructor;
 
     public static BeanConfigure forClass(Class<?> baseClass) {
         BeanConfigure configure = new BeanConfigure();

@@ -17,7 +17,7 @@ public class MiniConfigureReader implements BeanConfigureReader<Class<?>> {
             configure.setSingleton(component.singleton());
             for (Constructor<?> constructor : clazz.getConstructors()) {
                 if (constructor.isAnnotationPresent(Autowired.class)) {
-                    configure.setConstructor(constructor);
+                    configure.setBeanConstructor(new MiniBeanConstructor(constructor));
                     break;
                 }
             }
